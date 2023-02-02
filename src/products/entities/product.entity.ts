@@ -32,13 +32,10 @@ export class Product {
   gender: Genders;
 
   @BeforeInsert()
-  checkSlug() {
+  checkSlugInsert() {
     if (!this.slug) {
       this.slug = this.title;
     }
-    this.slug = this.slug
-      .toLocaleLowerCase()
-      .replaceAll(' ', '-')
-      .replaceAll("'", '');
+    this.slug = this.slug.toLowerCase().replace(/ /g, '_').replace(/ /g, '');
   }
 }
