@@ -1,4 +1,10 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Genders } from '../../common/enums/gender.enum';
 @Entity()
 export class Product {
@@ -33,6 +39,14 @@ export class Product {
 
   @BeforeInsert()
   checkSlugInsert() {
+    if (!this.slug) {
+      this.slug = this.title;
+    }
+    this.slug = this.slug.toLowerCase().replace(/ /g, '_').replace(/ /g, '');
+  }
+
+  @BeforeUpdate()
+  checkSlugUpdate() {
     if (!this.slug) {
       this.slug = this.title;
     }
