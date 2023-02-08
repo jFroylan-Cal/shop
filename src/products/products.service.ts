@@ -13,6 +13,7 @@ import { NotFoundException } from '@nestjs/common/exceptions';
 import { PaginationDto } from '../common/dtos/pagination.dto';
 import { validate as IsUUID } from 'uuid';
 import { ProductImage } from './entities/product-image.entity';
+import { arrayBuffer } from 'stream/consumers';
 
 @Injectable()
 export class ProductsService {
@@ -103,8 +104,16 @@ export class ProductsService {
     try {
       if (images) {
         await queryRunner.manager.delete(ProductImage, { product: { id: id } });
+        product.images = images.map((image) =>
+          this.productImageRepository.create({ url: image }),
+        );
       }
+      await queryRunner.manager.save(product);
+      await queryRunner.commitTransaction();
+      await queryRunner.release();
     } catch (error) {
+      await queryRunner.rollbackTransaction();
+      await queryRunner.release();
       this.handleDBExceptions(error);
     }
     if (!product)
