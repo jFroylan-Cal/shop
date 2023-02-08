@@ -3,9 +3,11 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Genders } from '../../common/enums/gender.enum';
+import { ProductImage } from './product-image.entity';
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn('uuid')
@@ -36,6 +38,15 @@ export class Product {
     nullable: true,
   })
   gender: Genders;
+
+  @Column({ type: 'text', array: true, default: [] })
+  tags: string[];
+
+  @OneToMany(() => ProductImage, (productImage) => productImage.product, {
+    cascade: true,
+    eager: true,
+  })
+  images?: ProductImage[];
 
   @BeforeInsert()
   checkSlugInsert() {
