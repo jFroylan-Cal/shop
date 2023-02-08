@@ -111,6 +111,7 @@ export class ProductsService {
       await queryRunner.manager.save(product);
       await queryRunner.commitTransaction();
       await queryRunner.release();
+      return this.findOnePlain(id);
     } catch (error) {
       await queryRunner.rollbackTransaction();
       await queryRunner.release();
@@ -118,7 +119,6 @@ export class ProductsService {
     }
     if (!product)
       throw new NotFoundException(`Product with id: ${id} not found`);
-    return `This action updates a #${id} product`;
   }
 
   async remove(id: string) {
