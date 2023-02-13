@@ -1,7 +1,5 @@
-import { Genders } from '../../common/enums/gender.enum';
 import {
   IsArray,
-  IsEnum,
   IsString,
   IsNumber,
   IsPositive,
@@ -37,8 +35,9 @@ export class CreateProductDto {
   @IsArray()
   sizes: string[];
 
-  @IsEnum(Genders)
-  gender: Genders;
+  @IsString({ each: true })
+  @IsArray()
+  gender: string[];
 
   @IsString({ each: true })
   @IsArray()

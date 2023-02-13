@@ -6,9 +6,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Genders } from '../../common/enums/gender.enum';
 import { ProductImage } from './product-image.entity';
-@Entity()
+@Entity({ name: 'Products' })
 export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -31,13 +30,8 @@ export class Product {
   @Column({ type: 'text', array: true })
   sizes: string[];
 
-  @Column({
-    type: 'enum',
-    enum: Genders,
-    default: Genders.MALE,
-    nullable: true,
-  })
-  gender: Genders;
+  @Column({ type: 'text', array: true })
+  gender: string[];
 
   @Column({ type: 'text', array: true, default: [] })
   tags: string[];
