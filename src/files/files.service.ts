@@ -6,11 +6,11 @@ import { join } from 'path';
 export class FilesService {
   getStaticProductImage(imageName: string) {
     const path = join(__dirname, '../../static/products', imageName);
-    if (!existsSync) {
+    if (!existsSync(path)) {
       throw new BadRequestException(
         `Not product found with image ${imageName}`,
       );
-      return path;
     }
+    return path;
   }
 }
