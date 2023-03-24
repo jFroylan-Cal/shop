@@ -13,6 +13,8 @@ import { RawHeader } from './decorators/raw-headers.decorator';
 import { CreateUserDTO, LoginUserDTO } from './dto';
 import { User } from './entities/user.entity';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
+import { RoleProtected } from './decorators/role-protected.decorator';
+import { ValidRoles } from './interfaces/valid-roles';
 
 @Controller('auth')
 export class AuthController {
@@ -50,4 +52,13 @@ export class AuthController {
   privateRoute(@GetUser() user: User) {
     return { ok: true, user };
   }
+
+  @Get('privateSecure')
+  @RoleProtected(ValidRoles.superUser)
+  @UseGuards(AuthGuard(), UserRoleGuard)
+  secureRoute(@GetUser() user: User) {
+    return { ok: true, user };
+  }
+
+  //Auth & Validate Role decorator
 }
