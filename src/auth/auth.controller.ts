@@ -8,12 +8,13 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
+import { Auth } from './decorators/auth.decorator';
 import { GetUser } from './decorators/get-user.decorator';
 import { RawHeader } from './decorators/raw-headers.decorator';
+import { RoleProtected } from './decorators/role-protected.decorator';
 import { CreateUserDTO, LoginUserDTO } from './dto';
 import { User } from './entities/user.entity';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
-import { RoleProtected } from './decorators/role-protected.decorator';
 import { ValidRoles } from './interfaces/valid-roles';
 
 @Controller('auth')
@@ -61,4 +62,9 @@ export class AuthController {
   }
 
   //Auth & Validate Role decorator
+  @Get('authUser')
+  @Auth(ValidRoles.admin)
+  validateRoute(@GetUser() user: User) {
+    return { ok: true, User };
+  }
 }
