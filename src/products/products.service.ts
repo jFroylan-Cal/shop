@@ -1,19 +1,19 @@
 import {
-  Injectable,
-  Logger,
-  InternalServerErrorException,
   BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { NotFoundException } from '@nestjs/common/exceptions';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { Product } from './entities/product.entity';
-import { NotFoundException } from '@nestjs/common/exceptions';
-import { PaginationDto } from '../common/dtos/pagination.dto';
 import { validate as IsUUID } from 'uuid';
+import { User } from '../auth/entities/user.entity';
+import { PaginationDto } from '../common/dtos/pagination.dto';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductImage } from './entities/product-image.entity';
-import { arrayBuffer } from 'stream/consumers';
+import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductsService {
@@ -27,11 +27,12 @@ export class ProductsService {
     private readonly datasourse: DataSource,
   ) {}
 
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto, user: User) {
     try {
       const { images = [], ...productDetails } = createProductDto;
       const product = this.productRepository.create({
         ...productDetails,
+        user,
         images: images.map((image) =>
           this.productImageRepository.create({ url: image }),
         ),
@@ -91,7 +92,7 @@ export class ProductsService {
     };
   }
 
-  async update(id: string, updateProductDto: UpdateProductDto) {
+  async update(id: string, updateProductDto: UpdateProductDto, user: User) {
     const { images, ...toUpdate } = updateProductDto;
     const product = await this.productRepository.preload({
       id,
@@ -108,6 +109,7 @@ export class ProductsService {
           this.productImageRepository.create({ url: image }),
         );
       }
+      product.user = user;
       await queryRunner.manager.save(product);
       await queryRunner.commitTransaction();
       await queryRunner.release();
