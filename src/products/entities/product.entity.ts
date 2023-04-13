@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -7,37 +8,47 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ProductImage } from './product-image.entity';
 import { User } from '../../auth/entities/user.entity';
+import { ProductImage } from './product-image.entity';
 @Entity({ name: 'Products' })
 export class Product {
+  @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty()
   @Column({ type: 'text', unique: true })
   title: string;
 
+  @ApiProperty()
   @Column({ type: 'float', default: 0 })
   price: number;
 
+  @ApiProperty()
   @Column({ type: 'text', nullable: true })
   description: string;
 
+  @ApiProperty()
   @Column({ type: 'text', unique: true })
   slug: string;
 
+  @ApiProperty()
   @Column({ type: 'int', default: 0 })
   stock: number;
 
+  @ApiProperty()
   @Column({ type: 'text', array: true })
   sizes: string[];
 
+  @ApiProperty()
   @Column({ type: 'text', array: true })
   gender: string[];
 
+  @ApiProperty()
   @Column({ type: 'text', array: true, default: [] })
   tags: string[];
 
+  @ApiProperty()
   @OneToMany(() => ProductImage, (productImage) => productImage.product, {
     cascade: true,
     eager: true,
