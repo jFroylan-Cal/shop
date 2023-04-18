@@ -12,7 +12,11 @@ import { User } from '../../auth/entities/user.entity';
 import { ProductImage } from './product-image.entity';
 @Entity({ name: 'Products' })
 export class Product {
-  @ApiProperty()
+  @ApiProperty({
+    example: 'sdf45sdf-45a4-as5d-weda3a4d5254g4bf4yt5r',
+    description: 'Product UUID',
+    uniqueItems: true,
+  })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
