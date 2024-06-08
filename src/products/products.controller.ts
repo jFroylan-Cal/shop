@@ -9,7 +9,6 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { User } from '../auth/entities/user.entity';
@@ -17,14 +16,15 @@ import { PaginationDto } from '../common/dtos/pagination.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './products.service';
-@ApiTags('Products')
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+@ApiTags('Songs')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post('create')
   @Auth()
-  @ApiResponse({ status: 200, description: 'Product was created' })
+  @ApiResponse({ status: 200, description: 'A song was created' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 200, description: 'Forbidden, Token related.' })
   create(@Body() createProductDto: CreateProductDto, @GetUser() user: User) {
@@ -32,16 +32,25 @@ export class ProductsController {
   }
 
   @Get('all')
+  @ApiResponse({ status: 200, description: 'Search all songs' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 200, description: 'Forbidden, Token related.' })
   findAll(@Query() pagination: PaginationDto) {
     return this.productsService.findAll(pagination);
   }
 
   @Get(':id')
+  @ApiResponse({ status: 200, description: 'Get one product' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 200, description: 'Forbidden, Token related.' })
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.findOnePlain(id);
   }
 
   @Patch(':id')
+  @ApiResponse({ status: 200, description: 'Update one product' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 200, description: 'Forbidden, Token related.' })
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateProductDto: UpdateProductDto,
@@ -51,6 +60,9 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @ApiResponse({ status: 200, description: 'Delete one product' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 200, description: 'Forbidden, Token related.' })
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.remove(id);
   }

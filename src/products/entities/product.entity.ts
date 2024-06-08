@@ -20,15 +20,29 @@ export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'La cucaracha',
+    description: 'A song of a cucarache',
+    uniqueItems: true,
+  })
   @Column({ type: 'text', unique: true })
   title: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: '10.99',
+    description: 'Price for song',
+    type: Number,
+    default: 0,
+  })
   @Column({ type: 'float', default: 0 })
   price: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'Description of a song',
+    type: String,
+    nullable: true,
+    description: 'Description of a song',
+  })
   @Column({ type: 'text', nullable: true })
   description: string;
 

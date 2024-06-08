@@ -7,6 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { Auth } from './decorators/auth.decorator';
 import { GetUser } from './decorators/get-user.decorator';
@@ -22,21 +23,26 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @ApiResponse({ status: 200, description: 'User was created' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
   create(@Body() createUserDto: CreateUserDTO) {
     return this.authService.create(createUserDto);
   }
 
   @Post('login')
+  @ApiResponse({ status: 400, description: 'Bad request' })
   loginUser(@Body() loginUserDto: LoginUserDTO) {
     return this.authService.login(loginUserDto);
   }
 
   @Get('check-auth-status')
+  @ApiResponse({ status: 400, description: 'Bad request' })
   checkAuthStatus(@GetUser() user: User) {
     return this.authService.checkAuthStatus(user);
   }
 
   @Get('private')
+  @ApiResponse({ status: 400, description: 'Bad request' })
   @UseGuards(AuthGuard())
   testingPrivateRoute(
     @GetUser() user: User,
